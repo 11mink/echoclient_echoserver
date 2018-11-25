@@ -1,5 +1,4 @@
 import sys
-import threading
 import select
 from socket import *
 
@@ -50,3 +49,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
