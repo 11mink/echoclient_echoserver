@@ -18,34 +18,32 @@ def main():
 	port = sys.argv[1]
 	addr = (ip, int(port))
 
-	serverSocket = socket(AF_INET, SOCK_STREAM)
-	serverSocket.bind(addr)
-	serverSocket.listen(5)
-	socketList = [serverSocket]
+	server = socket(AF_INET, SOCK_STREAM)
+	server.bind(addr)
+	server.listen(5)
+	socketList = [server]
 	size = 1024
 
 	while True:
 		readable, writable, exceptional = select.select(socketList, [], [], 10)
-
 		for sock in readable:
-			if sock == serverSocket:
-				clientSocket, addr = serverSocket.accept()
-				socketList.append(clientSocket)
+			if sock == server:
+				client, addr = server.accept()
+				socketList.append(client)
 				print("client connected", addr)
-
 			else:
 				data = sock.recv(size)
 				if not data:
 					sock.close()
 					socketList.remove(sock)
 				elif broadcast:
-					for client in socketList:
-						if client == serverSocket:
+					for socket in socketList:
+						if socket == server:
 							continue
 						else:
-							client.send(data)
+							socket.send(data)
 				else:
-					clientSocket.send(data)
+					client.send(data)
 
 if __name__ == "__main__":
 	main()
