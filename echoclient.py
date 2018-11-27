@@ -5,7 +5,7 @@ from socket import *
 def usage():
 		print("syntax : echoclient <host> <port>")
 		print("sample : echoclient 127.0.0.1 1234")
-
+		
 def main():
 	if len(sys.argv) != 3:
 		usage()
@@ -26,7 +26,7 @@ def main():
 
 	while True:
 		readable, writable, exceptional = select.select(inputs,[],[],timeout)
-
+		
 		if readable == [] and received == False:
 			print("disconnected")
 			client.close()
@@ -39,7 +39,7 @@ def main():
 					client.close()
 					sys.exit()
 				else:
-					print("<Server> " + client.recv(size))
+					print("<Server> " + data)
 					received = True
 			elif sock == sys.stdin:
 				client.send(raw_input())
@@ -47,4 +47,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-

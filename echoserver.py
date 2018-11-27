@@ -26,25 +26,24 @@ def main():
 
 	while True:
 		readable, writable, exceptional = select.select(socketList, [], [], 10)
-		for sock in readable:
-			if sock == server:
+		for fd in readable:
+			if fd == server:
 				client, addr = server.accept()
 				socketList.append(client)
 				print("client connected", addr)
 			else:
-				data = sock.recv(size)
+				data = fd.recv(size)
 				if not data:
-					sock.close()
-					socketList.remove(sock)
+					fd.close()
+					socketList.remove(fd)
 				elif broadcast:
-					for socket in socketList:
-						if socket == server:
+					for sock in socketList:
+						if sock == server:
 							continue
 						else:
-							socket.send(data)
+							sock.send(data)
 				else:
 					client.send(data)
 
 if __name__ == "__main__":
 	main()
-
